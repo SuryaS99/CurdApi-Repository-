@@ -1,0 +1,67 @@
+﻿using Curd.Database.IRepository;
+using Curd.Model.Models;
+using Curd.ModelDTO.ModelsDTO;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Curd.Database.Repository
+{
+    public class RoleRepository : Repository<Role>, IRoleRepository
+    {
+        public RoleRepository(AppDbContext repositoryContext) : base(repositoryContext)
+        {
+        }
+
+        public async Task<IEnumerable<Role>> getRole()
+        {
+            return await _repositoryContext.Role.ToListAsync();
+        }
+
+        public async Task<Role> getRoleById(int id)
+        {
+            var role = await _repositoryContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
+            return role;
+        }
+
+        public async Task<Role> CreateRole(RoleDto roleDto)
+        {
+            var role = new Role();
+            role.Id = roleDto.RoleId;
+            role.Name = roleDto.RoleName;
+            role.IsActive = roleDto.IsActive;
+            await _repositoryContext.Role.AddAsync(role);
+            await _repositoryContext.SaveChangesAsync();
+            return role;
+
+        }
+
+        public async Task<Role> UpdateRole(RoleDto roleDto)
+        {
+
+            var role = new Role();
+            role.Id = roleDto.RoleId;
+            role.Name = roleDto.RoleName;
+            role.IsActive = roleDto.IsActive;
+            if (role != null)
+            {
+                _repositoryContext.Entry(role).State = EntityState.Modified;
+                await _repositoryContext.SaveChangesAsync();
+            }
+            return role;
+        }
+
+        public async Task<Role> DeleteRole(int id)
+        {
+            var role = await _repositoryContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
+            _repositoryContext.Remove(role);
+            await _repositoryContext.SaveChangesAsync();
+            return role;
+
+        }
+
+    }
+}
