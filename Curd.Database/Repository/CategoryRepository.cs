@@ -25,7 +25,8 @@ namespace Curd.Database.Repository
 
         public async Task<Category> getCategoryById(int id)
         {
-            var category = await _repositoryContext.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+            var category = await _repositoryContext.Categories.
+                Where(c => c.CategoryId == id).FirstOrDefaultAsync();
             return category;
         }
         public async Task<Category> CreateCategory(Category category)

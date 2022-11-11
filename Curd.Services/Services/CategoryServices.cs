@@ -26,7 +26,11 @@ namespace Curd.Services.Categories
         public async Task<Category> getCategoryById(int id)
         {
             var category = await _category.getCategoryById(id);
-            return (Category)category;
+            if(category != null)
+            {
+                return (Category)category;
+            }
+            return null;
         }
         public async Task<Category> CreateCategory(Category category)
         {
