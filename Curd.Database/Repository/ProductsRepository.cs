@@ -12,31 +12,31 @@ namespace Curd.Database.Repository
 {
     public class ProductsRepository : Repository<Product>, IProductsRepository
     {
-        public ProductsRepository(AppDbContext repositoryContext) : base(repositoryContext)
+        public ProductsRepository(AppDbContext AppDbContext) : base(AppDbContext)
         {
 
         }
         public async Task<IEnumerable<Product>> getProduct()
         {
-            var product = await (from p in _repositoryContext.Products
+            var product = await (from p in _AppDbContext.Products
                                  select p).ToListAsync();
             return product;
         }
         public async Task<Product> getProductById(int id)
         {
-            var product = await _repositoryContext.Products.
+            var product = await _AppDbContext.Products.
                 Where(p => p.ProductId == id).FirstOrDefaultAsync();
             return product;
         }
         public async Task<Product> CreateProduct(Product product)
         {
-            await _repositoryContext.Products.AddAsync(product);
-            await _repositoryContext.SaveChangesAsync();
+            await _AppDbContext.Products.AddAsync(product);
+            await _AppDbContext.SaveChangesAsync();
             return product;
         }
         public async Task<Product> UpdateProduct(Product product)
         {
-            var _product = await _repositoryContext.Products.
+            var _product = await _AppDbContext.Products.
                 FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
             if (_product != null)
             {
@@ -44,16 +44,16 @@ namespace Curd.Database.Repository
                 _product.CategoryId = product.CategoryId;
             }
             // _repositoryContext.Update(product);
-            await _repositoryContext.SaveChangesAsync();
+            await _AppDbContext.SaveChangesAsync();
             return _product;
         }
 
         public async Task<Product> DeleteProduct(int id)
         {
-            var product = await _repositoryContext.Products.
+            var product = await _AppDbContext.Products.
                 Where(p => p.ProductId == id).FirstOrDefaultAsync();
-            _repositoryContext.Remove(product);
-            await _repositoryContext.SaveChangesAsync();
+            _AppDbContext.Remove(product);
+            await _AppDbContext.SaveChangesAsync();
             return product;
         }
 

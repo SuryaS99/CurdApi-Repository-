@@ -1,5 +1,7 @@
-﻿using Curd.ModelDTO.ModelsDTO;
+﻿using Curd.Model.Models;
+using Curd.ModelDTO.ModelsDTO;
 using Curd.Services.Account;
+using Curd.Services.Roles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -16,42 +18,47 @@ namespace Curd.Services.Token
     {
         private readonly IConfiguration _configuration;
         private readonly IAccountServices _accountService;
+        private readonly IRoleServices _roleServices;
 
-        public TokenServices(IConfiguration configuration, IAccountServices accountService)
+        public TokenServices(IConfiguration configuration, IAccountServices accountService,IRoleServices roleServices)
         {
             _configuration = configuration;
             _accountService = accountService;
+            _roleServices = roleServices;
         }
 
-        public async Task<string> CreateToken(LoginDto loginDTO)
+        public async Task<TokenDto> CreateToken(LoginDto loginDTO)
         {
             var user = await _accountService.login(loginDTO.Email, loginDTO.Password);
+            var role = await _roleServices.getRoleById(user.RoleId);
             var claims = new List<Claim>
             {
 
                 new Claim(JwtRegisteredClaimNames.NameId, loginDTO.Email),
-                new Claim("RoleID",loginDTO.RoleId.ToString(), ClaimValueTypes.Integer),
-                new Claim(ClaimTypes.Role,loginDTO.RoleName.ToString(),ClaimValueTypes.String)
+                new Claim("RoleID",Convert.ToString(role.Id), ClaimValueTypes.Integer),
+                new Claim(ClaimTypes.Name,user.Name.ToString(),ClaimValueTypes.String)
 
             };
 
             var _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:TokenKey"]));
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Issuer = _configuration["JWT:ValidIssuer"],
-                Audience = _configuration["JWT:ValidAudience"],
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
+            var tokenDescriptor = new JwtSecurityToken
+            (
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: creds);
 
-            };
+          
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.Token = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+            tokenDto.ExpiryTime = tokenDescriptor.ValidTo;
+            return tokenDto;
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            // return ok
-            return tokenHandler.WriteToken(token);
+            // return tokenHandler.WriteToken(token);
+            // return ;
             //}
 
 

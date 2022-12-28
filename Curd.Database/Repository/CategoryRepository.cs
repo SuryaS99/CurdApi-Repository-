@@ -18,42 +18,42 @@ namespace Curd.Database.Repository
         }
         public async Task<IEnumerable<Category>> getCategory()
         {
-            var category = await (from c in _repositoryContext.Categories
+            var category = await (from c in _AppDbContext.Categories
                                   select c).ToListAsync();
             return category;
         }
 
         public async Task<Category> getCategoryById(int id)
         {
-            var category = await _repositoryContext.Categories.
+            var category = await _AppDbContext.Categories.
                 Where(c => c.CategoryId == id).FirstOrDefaultAsync();
             return category;
         }
         public async Task<Category> CreateCategory(Category category)
         {
-            await _repositoryContext.Categories.AddAsync(category);
-            await _repositoryContext.SaveChangesAsync();
+            await _AppDbContext.Categories.AddAsync(category);
+            await _AppDbContext.SaveChangesAsync();
             return category;
         }
 
         public async Task<Category> UpdateCategory(Category category)
         {
-            var _Category = await _repositoryContext.Categories.
+            var _Category = await _AppDbContext.Categories.
                 FirstOrDefaultAsync(c => c.CategoryId == category.CategoryId);
             if (_Category != null)
             {
                 _Category.Name = category.Name;
             }
             // _repositoryContext.Update(category);
-            await _repositoryContext.SaveChangesAsync();
+            await _AppDbContext.SaveChangesAsync();
             return _Category;
         }
         public async Task<Category> DeleteCategory(int id)
         {
-            var category = await _repositoryContext.Categories.
+            var category = await _AppDbContext.Categories.
                 Where(c => c.CategoryId == id).FirstOrDefaultAsync();
-            _repositoryContext.Remove(category);
-            await _repositoryContext.SaveChangesAsync();
+            _AppDbContext.Remove(category);
+            await _AppDbContext.SaveChangesAsync();
             return category;
         }
         //public async Task<CategoryDto> DeleteCategoryDto(int id)

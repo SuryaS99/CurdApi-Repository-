@@ -1,4 +1,5 @@
-﻿using Curd.ModelDTO.ModelsDTO;
+﻿using Curd.Model.Models;
+using Curd.ModelDTO.ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Curd.Services.Token
 {
     public interface ITokenServices
     {
-        Task<string> CreateToken(LoginDto loginDTO);
+        Task<TokenDto> CreateToken(LoginDto loginDTO);
 
 
     }

@@ -12,18 +12,18 @@ namespace Curd.Database.Repository
 {
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
-        public RoleRepository(AppDbContext repositoryContext) : base(repositoryContext)
+        public RoleRepository(AppDbContext AppDbContext) : base(AppDbContext)
         {
         }
 
         public async Task<IEnumerable<Role>> getRole()
         {
-            return await _repositoryContext.Role.ToListAsync();
+            return await _AppDbContext.Role.ToListAsync();
         }
 
         public async Task<Role> getRoleById(int id)
         {
-            var role = await _repositoryContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
+            var role = await _AppDbContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
             return role;
         }
 
@@ -33,8 +33,8 @@ namespace Curd.Database.Repository
             role.Id = roleDto.RoleId;
             role.Name = roleDto.RoleName;
             role.IsActive = roleDto.IsActive;
-            await _repositoryContext.Role.AddAsync(role);
-            await _repositoryContext.SaveChangesAsync();
+            await _AppDbContext.Role.AddAsync(role);
+            await _AppDbContext.SaveChangesAsync();
             return role;
 
         }
@@ -48,19 +48,23 @@ namespace Curd.Database.Repository
             role.IsActive = roleDto.IsActive;
             if (role != null)
             {
-                _repositoryContext.Entry(role).State = EntityState.Modified;
-                await _repositoryContext.SaveChangesAsync();
+                _AppDbContext.Entry(role).State = EntityState.Modified;
+                await _AppDbContext.SaveChangesAsync();
             }
             return role;
         }
 
         public async Task<Role> DeleteRole(int id)
         {
-            var role = await _repositoryContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
-            _repositoryContext.Remove(role);
-            await _repositoryContext.SaveChangesAsync();
-            return role;
+            var role = await _AppDbContext.Role.Where(r => r.Id == id).FirstOrDefaultAsync();
+            if (role != null)
+            {
+                _AppDbContext.Remove(role);
+                await _AppDbContext.SaveChangesAsync();
+                return role;
+            }
 
+            return null;
         }
 
     }

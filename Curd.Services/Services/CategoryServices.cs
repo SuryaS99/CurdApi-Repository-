@@ -45,7 +45,11 @@ namespace Curd.Services.Categories
         public async Task<Category> DeleteCategory(int id)
         {
             var category = await _category.DeleteCategory(id);
-            return category;
+            if(category != null)
+            {
+                return category;
+            }
+            return null;
         }
         //public async Task<CategoryDto> DeleteCategoryDto(int id)
         //{

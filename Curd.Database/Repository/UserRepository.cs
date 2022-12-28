@@ -12,7 +12,7 @@ namespace Curd.Database.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(AppDbContext repositoryContext) : base(repositoryContext)
+        public UserRepository(AppDbContext AppDbContext) : base(AppDbContext)
         {
 
         }
@@ -27,8 +27,8 @@ namespace Curd.Database.Repository
             user.RoleId = userDto.RoleId;
             if (user == null)
             {
-                await _repositoryContext.User.AddAsync(user);
-                await _repositoryContext.SaveChangesAsync();
+                await _AppDbContext.User.AddAsync(user);
+                await _AppDbContext.SaveChangesAsync();
             }
 
             return user;
@@ -43,13 +43,13 @@ namespace Curd.Database.Repository
 
         public async Task<IEnumerable<User>> getUser()
         {
-            var user = await _repositoryContext.User.ToListAsync();
+            var user = await _AppDbContext.User.ToListAsync();
             return user;
         }
 
         public async Task<User> getUserById(int id)
         {
-            var user = await _repositoryContext.User.Where(u => u.Id == id).FirstOrDefaultAsync();
+            var user = await _AppDbContext.User.Where(u => u.Id == id).FirstOrDefaultAsync();
             return user;
         }
 
@@ -63,8 +63,8 @@ namespace Curd.Database.Repository
             user.RoleId = userDto.RoleId;
             if (userDto != null)
             {
-                _repositoryContext.Entry(user).State = EntityState.Modified;
-                await _repositoryContext.SaveChangesAsync();
+                _AppDbContext.Entry(user).State = EntityState.Modified;
+                await _AppDbContext.SaveChangesAsync();
 
             }
             return user;

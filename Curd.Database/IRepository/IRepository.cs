@@ -16,6 +16,10 @@ namespace Curd.Database.IRepository
         // void Update(T entity,Expression<Func<T, bool>> experssion);
         void Update(T entity);
         void Delete(Expression<Func<T, bool>> experssion);
+
+        Task<T> GetDefault(Expression<Func<T, bool>> expression);
+
+      //  Task<T> Upload(T entity);
         //  void DeleteDto(Expression<Func<T, bool>> experssion);
         //Task<Product> CreateProduct(Product product);
     }

@@ -15,5 +15,6 @@ namespace Curd.Database.IRepository
         Task<User> CreateUser(UserDto userDto);
         Task<User> UpdateUser(UserDto userDto);
         Task<User> DeleteUser(int id);
+
     }
 }

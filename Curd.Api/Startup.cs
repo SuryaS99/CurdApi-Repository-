@@ -10,6 +10,7 @@ using Curd.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ namespace Curd.Api
 
             services.AddDbContext<AppDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("CatD")));
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryServices, CategoryServices>();
             services.AddScoped<IProductsRepository, ProductsRepository>();
@@ -123,18 +125,27 @@ namespace Curd.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Curd.Api v1"));
             }
-
+            //else
+            //{
+            //    app.UseHsts();
+            //}
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Could Not found Anything");
+            //});
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Curd.Database.IRepository;
+using Curd.Model.Models;
 using Curd.ModelDTO.ModelsDTO;
 using System;
 using System.Collections.Generic;
@@ -10,24 +11,16 @@ namespace Curd.Services.Account
 {
     public class AccountServices : IAccountServices
     {
-        private readonly IAccountRepository _account;
-
-        public AccountServices(IAccountRepository account)
+        private readonly IUserRepository _userRepository;
+        public AccountServices(IUserRepository userRepository)
         {
-            _account = account;
+          
+            _userRepository = userRepository;
         }
-
-        public async Task<LoginDto> login(string Email, string Password)
+        public async Task<User> login(string Email, string Password)
         {
-            var account = await _account.login(Email, Password);
+            var account = await _userRepository.GetDefault(x => x.Email == Email && x.Password == Password);
             return account;
         }
-
-        //public Task<Role> GetRoleNameByRoleId(int id)
-        //{
-        //    var role = _account.GetRoleNameByRoleId(id);
-        //    return role;
-        //}
-        //  public Task<> Login(LoginDTO login);
     }
 }

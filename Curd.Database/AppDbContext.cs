@@ -19,6 +19,7 @@ namespace Curd.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Upload> Upload { get; set; }
 
        
     }

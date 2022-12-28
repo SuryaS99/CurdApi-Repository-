@@ -1,4 +1,5 @@
 ﻿using Curd.Database.IRepository;
+using Curd.Model.Models;
 using Curd.ModelDTO.ModelsDTO;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,27 +13,30 @@ namespace Curd.Database.Repository
 {
     public class AccountRepository : Repository<LoginDto>, IAccountRepository
     {
-        public AccountRepository(AppDbContext repositoryContext) : base(repositoryContext)
+        //private readonly IUnitOfWork _unitOfWork;
+
+        public AccountRepository(AppDbContext AppDbContext) : base(AppDbContext)
         {
-
+           
         }
+        
+        //public async Task<User> login(string Email, string Password)
+        //{
 
-
-        public async Task<LoginDto> login(string Email, string Password)
-        {
-            var loginDto = await (from u in _repositoryContext.User
-                                  join r in _repositoryContext.Role
-                                  on u.RoleId equals r.Id
-                                  where u.Email == Email & u.Password == Password
-                                  select new LoginDto
-                                  {
-                                      Email = u.Email,
-                                      Password = u.Password,
-                                      RoleId = u.RoleId,
-                                      RoleName = r.Name
-                                  }).FirstOrDefaultAsync();
-            return loginDto;
-        }
+        //     return await UserRepository.GetDefault(x => x.Email == Email && x.Password == Password);
+        //    //var loginDto = await (from u in _AppDbContext.User
+        //    //                    //  join r in _AppDbContext.Role
+        //    //                     // on u.RoleId equals r.Id
+        //    //                      where u.Email == Email & u.Password == Password
+        //    //                      select new UserDto
+        //    //                      {
+        //    //                          Email = u.Email,
+        //    //                          Password = u.Password,
+        //    //                          RoleId = u.RoleId,
+        //    //                          //RoleName = r.Name
+        //    //                      }).FirstOrDefaultAsync();
+        //    //return loginDto;
+        //}
 
 
         //public async Task<User> checkValidtion(string Email, string Password)
